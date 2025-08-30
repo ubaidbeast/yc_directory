@@ -1,10 +1,11 @@
-import { formatDate } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 import { EyeIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { Button } from './ui/button'
 import { Startup, Author } from '@/sanity/types'
+import { Skeleton } from './ui/skeleton'
 
 export type StartupCardType = Omit<Startup, "author"> & {author?: Author}
 
@@ -12,7 +13,7 @@ const StartUpCard = ({ post }: { post: StartupCardType } ) => {
   const { _createdAt, views, author, title, category, _id, image, description } = post
   
   return (
-    <li className='startup-card group'>
+    <li className='startup-card group '>
         <div className='flex-between'>
             <p className='startup_card_date'>
                 {formatDate(_createdAt)}
@@ -33,8 +34,9 @@ const StartUpCard = ({ post }: { post: StartupCardType } ) => {
                     </h3>
                 </Link>
             </div>
-            <Link href={`/startup/${author?._id}`}>
-                <Image src="https://placehold.co/48x48" alt='placeholder' width={48} height={48} className='rounded-full' />
+            <Link href={`/user/${author?._id}`}>
+                {/* eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain*/}
+                <Image src={author?.image!} alt={author?.name!} width={48} height={48} className='rounded-full' />
             </Link>
         </div>
         <Link href={`/startup/${_id}`}>
@@ -57,5 +59,15 @@ const StartUpCard = ({ post }: { post: StartupCardType } ) => {
     </li>
   )
 }
+
+export const StartupCardSkeleton = () => (
+    <>
+        {[1,2,3,4,5].map((index: number) => (
+            <li className='mb-5' key={cn('skeleton', index)}>
+                <Skeleton className='startup-card_skeleton'/>
+            </li>
+        ))}
+    </>
+)
 
 export default StartUpCard
